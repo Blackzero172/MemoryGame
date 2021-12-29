@@ -1,0 +1,10 @@
+nav {
+	width: 100%;
+	background-color: #2c9de8;
+	display: flex;
+	justify-content: flex-start;
+	padding-left: 1rem;
+}
+nav a {
+	background-color: #5589ab;
+}
