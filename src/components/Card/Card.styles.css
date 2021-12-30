@@ -1,0 +1,43 @@
+.card {
+	width: 100%;
+	height: 150px;
+	transform-style: preserve-3d;
+	transition: transform 0.5s linear;
+	font-size: 1.25rem;
+	margin: 1rem 0 0 0;
+}
+.face {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	backface-visibility: hidden;
+	background: #2c9de8;
+	color: #fff;
+	border-radius: 10px;
+}
+.back {
+	overflow: hidden;
+	z-index: -1;
+	display: block;
+	transform: rotateY(180deg);
+	box-sizing: border-box;
+	background: #ccc;
+	color: #000;
+}
+.front,
+.back {
+	transition: transform 0.5s linear;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+p,
+.card div {
+	pointer-events: none;
+}
+.flipped {
+	transform: rotateY(180deg);
+}
+.text-hidden {
+	color: #ccc;
+}

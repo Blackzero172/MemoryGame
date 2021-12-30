@@ -1,8 +1,8 @@
 :root {
-	--transition-time: 0.5s;
+	--transition-time: 0.3s;
 }
 a {
-	color: black;
+	color: #2c9de8;
 	text-decoration: none;
 	padding: 0.25rem 1rem;
 	margin: 0.5rem 1rem;
@@ -11,24 +11,28 @@ a {
 	overflow: hidden;
 	justify-content: center;
 	align-items: center;
+	border-radius: 3px;
 }
-a::before {
+a::before,
+a::after {
 	content: "";
 	width: 100%;
-	background: red;
-	height: 0.3vh;
+	background: #2c9de8;
+	height: 3px;
 	transform: translateX(-155%);
 	transition: transform var(--transition-time) ease;
 }
 a::after {
-	content: "";
-	width: 100%;
-	background: red;
-	height: 0.3vh;
 	transform: translateX(155%);
-	transition: transform var(--transition-time) ease;
 }
 a:hover::before,
 a:hover::after {
 	transform: translateX(0);
+}
+a:hover {
+	color: #333;
+	background: #ccc;
+}
+a:active {
+	background: #999;
 }
