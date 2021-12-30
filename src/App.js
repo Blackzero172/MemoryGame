@@ -73,8 +73,14 @@ function App() {
 	};
 	const selectDiffculty = (e) => {
 		setDiffuclty(e.target.innerText);
-		const cardsCopy = cards.slice(0, 8);
-		filterCards(shuffle([...cardsCopy, ...cardsCopy]));
+		const cardsCopy = [...cards];
+		const diffCards = [];
+		for (let i = 0; i < 8; i++) {
+			const randNum = Math.floor(Math.random() * cardsCopy.length);
+			diffCards.push(cardsCopy[randNum]);
+			cardsCopy.splice(randNum, 1);
+		}
+		filterCards(shuffle([...diffCards, ...diffCards]));
 	};
 	return (
 		<BrowserRouter>
