@@ -22,6 +22,7 @@ const shuffle = (array) => {
 
 	return array;
 };
+
 function App() {
 	const [cards, setCards] = useState([]);
 	const [flippedCards, selectCard] = useState([]);
@@ -36,34 +37,53 @@ function App() {
 		getCards();
 	}, []);
 	const flipCard = (e) => {
-		selectCard([...flippedCards, e.target.getAttribute("card")]);
-		e.target.classList.toggle("flipped");
-		if (flippedCards.length >= 2) {
-			checkCards();
+		if (flippedCards.length < 2 && !e.target.classList.contains("flipped")) {
+			selectCard([...flippedCards, e.target]);
+			e.target.classList.toggle("flipped");
 		}
 	};
+	useEffect(() => {
+		checkCards();
+	}, [flippedCards]);
 	const checkCards = () => {
-		if (flippedCards[0].answer === flippedCards[1].answer) {
-			setPairs(correctPairs + 1);
-			selectCard([]);
-		} else {
-			flippedCards.forEach((card) => {
-				card.classList.remove("flipped");
+		if (flippedCards.length >= 2) {
+			if (flippedCards[0].getAttribute("answer") === flippedCards[1].getAttribute("answer")) {
+				setPairs(correctPairs + 1);
+				flippedCards.forEach((card) => {
+					card.classList.add("correct");
+					selectCard([]);
+				});
+
 				selectCard([]);
-			});
+			} else {
+				setTimeout(() => {
+					flippedCards.forEach((card) => {
+						card.classList.remove("flipped");
+						selectCard([]);
+					});
+				}, 700);
+			}
 		}
 	};
-	const selectDiffuclty = (e) => {
-		setDiffuclty(e.target.diff);
+	useEffect(() => {
+		if (correctPairs === filteredCards.length / 2 && filteredCards.length > 0) handleWin();
+	}, [correctPairs]);
+	const handleWin = () => {
+		console.log("Win");
+	};
+	const selectDiffculty = (e) => {
+		setDiffuclty(e.target.innerText);
+		const cardsCopy = cards.slice(0, 8);
+		filterCards(shuffle([...cardsCopy, ...cardsCopy]));
 	};
 	return (
 		<BrowserRouter>
 			<Header />
 			<Route path="/" exact>
-				<LandingPage selectDiffuclty={selectDiffuclty} />
+				<LandingPage selectDiffculty={selectDiffculty} />
 			</Route>
 			<Route path="/play">
-				<PlayPage cards={cards} flipCard={flipCard} />
+				<PlayPage cards={filteredCards} flipCard={flipCard} />
 			</Route>
 			<Route path="/edit">
 				<EditPage />

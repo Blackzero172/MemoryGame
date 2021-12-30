@@ -2,7 +2,7 @@ import "./Card.styles.css";
 import React from "react";
 const Card = ({ card, onClick }) => {
 	return (
-		<div className="card" onClick={onClick} card={card}>
+		<div className="card" onClick={onClick} answer={card.answer}>
 			<div className="front face"></div>
 			<div className="back face">
 				<p>{card.answer}</p>

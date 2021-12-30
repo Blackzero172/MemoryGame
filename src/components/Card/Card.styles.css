@@ -23,6 +23,7 @@
 	box-sizing: border-box;
 	background: #ccc;
 	color: #000;
+	transition: color 0.5s ease;
 }
 .front,
 .back {
@@ -37,6 +38,9 @@ p,
 }
 .flipped {
 	transform: rotateY(180deg);
+}
+.correct .back {
+	background: chartreuse;
 }
 .text-hidden {
 	color: #ccc;
