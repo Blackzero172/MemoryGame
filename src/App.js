@@ -22,13 +22,17 @@ const shuffle = (array) => {
 
 	return array;
 };
-
+let intervalID;
 function App() {
 	const [cards, setCards] = useState([]);
 	const [flippedCards, selectCard] = useState([]);
-	const [diffucltyLevel, setDiffuclty] = useState("Easy");
+	const [diffucltyLevel, setDiffuclty] = useState("");
 	const [filteredCards, filterCards] = useState([]);
 	const [correctPairs, setPairs] = useState(0);
+	let timerDuration = 0;
+	const gridRef = useRef();
+	const timerRef = useRef();
+
 	useEffect(() => {
 		const getCards = async () => {
 			const { data } = await api.get();
@@ -61,7 +65,7 @@ function App() {
 						card.classList.remove("flipped");
 						selectCard([]);
 					});
-				}, 700);
+				}, 500);
 			}
 		}
 	};
@@ -69,11 +73,15 @@ function App() {
 		if (correctPairs === filteredCards.length / 2 && filteredCards.length > 0) handleWin();
 	}, [correctPairs]);
 	const handleWin = () => {
-		console.log("Win");
+		console.log(intervalID);
+		clearInterval(intervalID);
 	};
 	const selectDiffculty = (e) => {
 		setDiffuclty(e.target.innerText);
 		const cardsCopy = [...cards];
+		timerDuration = e.target.innerText === "Easy" ? 24000 : e.target.innerText === "Medium" ? 14000 : 12000;
+		clearInterval(intervalID);
+		activateTimer();
 		const diffCards = [];
 		for (let i = 0; i < 8; i++) {
 			const randNum = Math.floor(Math.random() * cardsCopy.length);
@@ -82,14 +90,27 @@ function App() {
 		}
 		filterCards(shuffle([...diffCards, ...diffCards]));
 	};
+	const resetDiffculty = () => {
+		setDiffuclty("");
+		clearInterval(intervalID);
+	};
+	const activateTimer = () => {
+		const ratio = timerDuration / 100;
+		intervalID = setInterval(() => {
+			if (timerDuration > 0) timerDuration -= 100;
+			if (timerRef.current) {
+				timerRef.current.style.width = `${timerDuration / ratio}%`;
+			}
+		}, 100);
+	};
 	return (
 		<BrowserRouter>
-			<Header />
+			<Header reset={resetDiffculty} />
 			<Route path="/" exact>
 				<LandingPage selectDiffculty={selectDiffculty} />
 			</Route>
 			<Route path="/play">
-				<PlayPage cards={filteredCards} flipCard={flipCard} />
+				<PlayPage cards={filteredCards} flipCard={flipCard} gridRef={gridRef} timerRef={timerRef} />
 			</Route>
 			<Route path="/edit">
 				<EditPage />
