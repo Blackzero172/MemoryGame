@@ -26,7 +26,6 @@ let intervalID;
 function App() {
 	const [cards, setCards] = useState([]);
 	const [flippedCards, selectCard] = useState([]);
-	const [diffucltyLevel, setDiffuclty] = useState("");
 	const [filteredCards, filterCards] = useState([]);
 	const [correctPairs, setPairs] = useState(0);
 	let timerDuration = 0;
@@ -48,6 +47,7 @@ function App() {
 	};
 	useEffect(() => {
 		checkCards();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [flippedCards]);
 	const checkCards = () => {
 		if (flippedCards.length >= 2) {
@@ -71,13 +71,13 @@ function App() {
 	};
 	useEffect(() => {
 		if (correctPairs === filteredCards.length / 2 && filteredCards.length > 0) handleWin();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [correctPairs]);
 	const handleWin = () => {
 		console.log(intervalID);
 		clearInterval(intervalID);
 	};
 	const selectDiffculty = (e) => {
-		setDiffuclty(e.target.innerText);
 		const cardsCopy = [...cards];
 		timerDuration = e.target.innerText === "Easy" ? 24000 : e.target.innerText === "Medium" ? 14000 : 12000;
 		clearInterval(intervalID);
@@ -90,8 +90,7 @@ function App() {
 		}
 		filterCards(shuffle([...diffCards, ...diffCards]));
 	};
-	const resetDiffculty = () => {
-		setDiffuclty("");
+	const reset = () => {
 		clearInterval(intervalID);
 	};
 	const activateTimer = () => {
@@ -105,7 +104,7 @@ function App() {
 	};
 	return (
 		<BrowserRouter>
-			<Header reset={resetDiffculty} />
+			<Header reset={reset} />
 			<Route path="/" exact>
 				<LandingPage selectDiffculty={selectDiffculty} />
 			</Route>
