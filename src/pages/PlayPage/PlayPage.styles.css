@@ -1,14 +1,21 @@
 #card-grid {
 	width: 100%;
 	display: grid;
-	grid-template-columns: repeat(4, 20%);
 	justify-content: center;
+	align-items: center;
+	height: 93.5vh;
 	padding: 4rem 7rem;
-	gap: 0.5rem 1.25rem;
+	gap: 0.5rem;
 }
 .timer {
 	width: 100%;
 	height: 1vh;
-	background: red;
+	background: chartreuse;
 	transition: width 0.4s ease;
+}
+.Easy {
+	grid-template-columns: repeat(4, 20%);
+}
+.Medium {
+	grid-template-columns: repeat(6, 13%);
 }

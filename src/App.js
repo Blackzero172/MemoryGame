@@ -4,6 +4,7 @@ import PlayPage from "./pages/PlayPage/PlayPage.pages";
 import LandingPage from "./pages/LandingPage/LandingPage.pages";
 import EditPage from "./pages/EditPage/EditPage.pages";
 import Header from "./components/Header/Header.components";
+import Spinner from "./components/Spinner/Spinner.components";
 import api from "./components/API/api";
 import { useState, useEffect, useRef } from "react";
 const shuffle = (array) => {
@@ -27,15 +28,17 @@ function App() {
 	const [cards, setCards] = useState([]);
 	const [flippedCards, selectCard] = useState([]);
 	const [filteredCards, filterCards] = useState([]);
+	const [difficultyLevel, setDifficulty] = useState("");
 	const [correctPairs, setPairs] = useState(0);
 	let timerDuration = 0;
 	const gridRef = useRef();
 	const timerRef = useRef();
-
+	const spinnerRef = useRef();
 	useEffect(() => {
 		const getCards = async () => {
 			const { data } = await api.get();
 			setCards(data);
+			spinnerRef.current.classList.add("hidden");
 		};
 		getCards();
 	}, []);
@@ -74,23 +77,30 @@ function App() {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [correctPairs]);
 	const handleWin = () => {
-		console.log(intervalID);
 		clearInterval(intervalID);
 	};
 	const selectDiffculty = (e) => {
-		const cardsCopy = [...cards];
-		timerDuration = e.target.innerText === "Easy" ? 24000 : e.target.innerText === "Medium" ? 14000 : 12000;
+		setDifficulty(e.target.innerText);
 		clearInterval(intervalID);
+		const cardsCopy = [...cards];
+		timerDuration = e.target.innerText === "Easy" ? 32000 : e.target.innerText === "Medium" ? 30000 : 25000;
+		const numOfPairs = e.target.innerText === "Easy" ? 8 : 18;
 		activateTimer();
 		const diffCards = [];
-		for (let i = 0; i < 8; i++) {
+		for (let i = 0; i < numOfPairs; i++) {
 			const randNum = Math.floor(Math.random() * cardsCopy.length);
 			diffCards.push(cardsCopy[randNum]);
 			cardsCopy.splice(randNum, 1);
 		}
+		if (gridRef.current) gridRef.current.className = e.target.innerText;
 		filterCards(shuffle([...diffCards, ...diffCards]));
 	};
+	useEffect(() => {
+		console.log(gridRef.current && difficultyLevel !== "");
+		if (gridRef.current && difficultyLevel !== "") gridRef.current.className = difficultyLevel;
+	});
 	const reset = () => {
+		setDifficulty("");
 		clearInterval(intervalID);
 	};
 	const activateTimer = () => {
@@ -114,6 +124,7 @@ function App() {
 			<Route path="/edit">
 				<EditPage />
 			</Route>
+			<Spinner spinnerRef={spinnerRef} />
 		</BrowserRouter>
 	);
 }

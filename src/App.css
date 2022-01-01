@@ -7,7 +7,26 @@ body {
 	padding: 0;
 	box-sizing: border-box;
 }
-
+.spinner {
+	width: 100%;
+	position: fixed;
+	left: 0;
+	top: 0;
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	backdrop-filter: blur(2.5px);
+	transition: opacity 1s ease;
+	transition-property: opacity, visibility;
+	z-index: 2;
+	visibility: visible;
+	opacity: 1;
+}
+.hidden {
+	opacity: 0;
+	visibility: hidden;
+}
 .App {
 	text-align: center;
 }
