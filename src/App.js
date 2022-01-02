@@ -27,7 +27,7 @@ let intervalID;
 function App() {
 	const [cards, setCards] = useState([]);
 	const [flippedCards, selectCard] = useState([]);
-	const [filteredCards, filterCards] = useState([]);
+	const [cardsInPlay, chooseCards] = useState([]);
 	const [difficultyLevel, setDifficulty] = useState("");
 	const [correctPairs, setPairs] = useState(0);
 	let timerDuration = 0;
@@ -73,7 +73,7 @@ function App() {
 		}
 	};
 	useEffect(() => {
-		if (correctPairs === filteredCards.length / 2 && filteredCards.length > 0) handleWin();
+		if (correctPairs === cardsInPlay.length / 2 && cardsInPlay.length > 0) handleWin();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [correctPairs]);
 	const handleWin = () => {
@@ -93,10 +93,9 @@ function App() {
 			cardsCopy.splice(randNum, 1);
 		}
 		if (gridRef.current) gridRef.current.className = e.target.innerText;
-		filterCards(shuffle([...diffCards, ...diffCards]));
+		chooseCards(shuffle([...diffCards, ...diffCards]));
 	};
 	useEffect(() => {
-		console.log(gridRef.current && difficultyLevel !== "");
 		if (gridRef.current && difficultyLevel !== "") gridRef.current.className = difficultyLevel;
 	});
 	const reset = () => {
@@ -119,10 +118,10 @@ function App() {
 				<LandingPage selectDiffculty={selectDiffculty} />
 			</Route>
 			<Route path="/play">
-				<PlayPage cards={filteredCards} flipCard={flipCard} gridRef={gridRef} timerRef={timerRef} />
+				<PlayPage cards={cardsInPlay} flipCard={flipCard} gridRef={gridRef} timerRef={timerRef} />
 			</Route>
 			<Route path="/edit">
-				<EditPage />
+				<EditPage cards={cards} />
 			</Route>
 			<Spinner spinnerRef={spinnerRef} />
 		</BrowserRouter>

@@ -3,10 +3,10 @@ import "./Spinner.styles.css";
 const Spinner = ({ spinnerRef }) => {
 	return (
 		<div className="spinner" ref={spinnerRef}>
-			<div class="color-dots">
-				<div class="dot-1"></div>
-				<div class="dot-2"></div>
-				<div class="dot-3"></div>
+			<div className="color-dots">
+				<div className="dot-1"></div>
+				<div className="dot-2"></div>
+				<div className="dot-3"></div>
 			</div>
 		</div>
 	);
