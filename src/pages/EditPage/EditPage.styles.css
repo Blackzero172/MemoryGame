@@ -1,29 +1,18 @@
 .card-grid {
-	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-	width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  width: 100%;
+  gap: 1rem;
 }
 .main-container {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	padding-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 1rem;
 }
 .add-btn {
-	width: 100px;
-	height: 100px;
-	font-size: 3rem;
-	border-radius: 50%;
-	color: #2c9de8;
-	background: #333;
-	border: 2px solid lightgray;
-}
-.add-btn:hover {
-	color: #333;
-	background: #2c9de8;
-	border: 2px solid gray;
-}
-.add-btn:active {
-	background: #2885c3;
-	border: 2px solid black;
+  width: 100px;
+  height: 100px;
+  font-size: 3rem;
+  border-radius: 50%;
 }

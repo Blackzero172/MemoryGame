@@ -1,6 +1,13 @@
 .edit-card {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	flex-direction: column;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+  border: 2px solid #2c9de8;
+}
+.card-name {
+  margin: 1rem 0 0.5rem 1rem;
+}
+.card-answer {
+  margin: 0 0 2rem 5rem;
 }
