@@ -1,0 +1,24 @@
+.popup-container {
+	backdrop-filter: blur(2px);
+	position: fixed;
+	top: 0;
+	width: 100%;
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.window {
+	width: 40%;
+	height: 40vh;
+	background: #333;
+	display: flex;
+	border: 2px solid #2c9de8;
+	flex-direction: column;
+	align-items: center;
+	border-radius: 0.5rem;
+}
+.window button {
+	padding: 0.5rem;
+	margin-top: auto;
+}

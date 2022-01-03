@@ -19,7 +19,7 @@
 }
 @keyframes Dot {
 	10% {
-		background-color: cyan;
+		background-color: #2c9de8;
 	}
 	40% {
 		background-color: gray;

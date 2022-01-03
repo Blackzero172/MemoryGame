@@ -5,7 +5,9 @@ import LandingPage from "./pages/LandingPage/LandingPage.pages";
 import EditPage from "./pages/EditPage/EditPage.pages";
 import Header from "./components/Header/Header.components";
 import Spinner from "./components/Spinner/Spinner.components";
+import Popup from "./components/Popup/Popup.components";
 import api from "./components/API/api";
+import CustomInput from "./components/CustomInput/CustomInput.components";
 import { useState, useEffect, useRef } from "react";
 const shuffle = (array) => {
 	let currentIndex = array.length,
@@ -30,10 +32,12 @@ function App() {
 	const [cardsInPlay, chooseCards] = useState([]);
 	const [difficultyLevel, setDifficulty] = useState("");
 	const [correctPairs, setPairs] = useState(0);
+	const [currentEditCard, setEditCard] = useState({});
 	let timerDuration = 0;
 	const gridRef = useRef();
 	const timerRef = useRef();
 	const spinnerRef = useRef();
+	const editMenuRef = useRef();
 	useEffect(() => {
 		const getCards = async () => {
 			const { data } = await api.get();
@@ -41,6 +45,7 @@ function App() {
 			spinnerRef.current.classList.add("hidden");
 		};
 		getCards();
+		console.log(editMenuRef);
 	}, []);
 	const flipCard = (e) => {
 		if (flippedCards.length < 2 && !e.target.classList.contains("flipped")) {
@@ -111,6 +116,7 @@ function App() {
 			}
 		}, 100);
 	};
+	const showHideMenu = () => {};
 	return (
 		<BrowserRouter>
 			<Header reset={reset} />
@@ -124,6 +130,18 @@ function App() {
 				<EditPage cards={cards} />
 			</Route>
 			<Spinner spinnerRef={spinnerRef} />
+			<Popup buttonText={<i className="fas fa-plus"></i>} popRef={editMenuRef}>
+				<CustomInput
+					placeholder="Please Input The Keyword"
+					label="Keyword"
+					value={currentEditCard ? currentEditCard.answer : ""}
+				/>
+				<CustomInput
+					placeholder="Please Input The Icon URL"
+					label="Icon"
+					value={currentEditCard ? currentEditCard.imageURL : ""}
+				/>
+			</Popup>
 		</BrowserRouter>
 	);
 }
