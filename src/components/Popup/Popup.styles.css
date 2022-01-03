@@ -18,6 +18,10 @@
 	align-items: center;
 	border-radius: 0.5rem;
 }
+.error .window {
+	border: 2px solid red;
+	color: red;
+}
 .window button {
 	padding: 0.5rem;
 	margin-top: auto;

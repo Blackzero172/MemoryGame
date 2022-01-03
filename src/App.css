@@ -2,6 +2,9 @@ body {
 	background-color: #333;
 	color: #61dafb;
 }
+i {
+	pointer-events: none;
+}
 * {
 	margin: 0;
 	padding: 0;

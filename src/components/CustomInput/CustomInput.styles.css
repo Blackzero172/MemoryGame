@@ -16,3 +16,6 @@
 .container input:focus {
 	outline: none;
 }
+.container .empty-input {
+	border: 2px solid red;
+}

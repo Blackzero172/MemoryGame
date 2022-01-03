@@ -38,14 +38,15 @@ function App() {
 	const timerRef = useRef();
 	const spinnerRef = useRef();
 	const editMenuRef = useRef();
+	const keywordInputRef = useRef();
+	const imgURLInputRef = useRef();
+	const getCards = async () => {
+		const { data } = await api.get();
+		setCards(data);
+		spinnerRef.current.classList.add("hidden");
+	};
 	useEffect(() => {
-		const getCards = async () => {
-			const { data } = await api.get();
-			setCards(data);
-			spinnerRef.current.classList.add("hidden");
-		};
 		getCards();
-		console.log(editMenuRef);
 	}, []);
 	const flipCard = (e) => {
 		if (flippedCards.length < 2 && !e.target.classList.contains("flipped")) {
@@ -116,7 +117,72 @@ function App() {
 			}
 		}, 100);
 	};
-	const showHideMenu = () => {};
+	const onButtonClick = (e) => {
+		if (e.target.id) {
+			setEditCard(cards.find((card) => card.id === e.target.id));
+
+			if (e.target.getAttribute("action") === "Delete") deleteItem(e.target.id);
+			else showHideMenu(e);
+		} else showHideMenu(e);
+	};
+	useEffect(() => {
+		if (currentEditCard.hasOwnProperty("answer")) {
+			keywordInputRef.current.value = currentEditCard.answer;
+			imgURLInputRef.current.value = currentEditCard.imageURL;
+		}
+	}, [currentEditCard]);
+	const showHideMenu = async (e) => {
+		if (
+			keywordInputRef.current.value !== "" &&
+			!editMenuRef.current.classList.contains("hidden") &&
+			!e.target.classList.contains("cancel")
+		) {
+			editMenuRef.current.classList.add("hidden");
+			if (currentEditCard === {}) await postItem();
+			else await postItem(currentEditCard.id);
+			getCards();
+		} else if (e.target.classList.contains("cancel")) {
+			editMenuRef.current.classList.add("hidden");
+			clearInputs();
+		} else if (!editMenuRef.current.classList.contains("hidden")) {
+			if (keywordInputRef.current.value === "") {
+				keywordInputRef.current.classList.add("empty-input");
+				setTimeout(() => {
+					keywordInputRef.current.classList.remove("empty-input");
+				}, 1500);
+			}
+		} else {
+			editMenuRef.current.classList.remove("hidden");
+		}
+	};
+	const clearInputs = () => {
+		keywordInputRef.current.value = "";
+		imgURLInputRef.current.value = "";
+		setEditCard({});
+	};
+	const postItem = async (id) => {
+		spinnerRef.current.classList.remove("hidden");
+		if (id) {
+			await api.put(id, {
+				answer: keywordInputRef.current.value,
+				imageURL: imgURLInputRef.current.value,
+			});
+			setEditCard({});
+		} else
+			await api.post("", {
+				answer: keywordInputRef.current.value,
+				imageURL: imgURLInputRef.current.value,
+			});
+		keywordInputRef.current.value = "";
+		imgURLInputRef.current.value = "";
+		spinnerRef.current.classList.add("hidden");
+	};
+	const deleteItem = async (id) => {
+		spinnerRef.current.classList.remove("hidden");
+		await api.delete(id);
+		getCards();
+		spinnerRef.current.classList.add("hidden");
+	};
 	return (
 		<BrowserRouter>
 			<Header reset={reset} />
@@ -127,19 +193,32 @@ function App() {
 				<PlayPage cards={cardsInPlay} flipCard={flipCard} gridRef={gridRef} timerRef={timerRef} />
 			</Route>
 			<Route path="/edit">
-				<EditPage cards={cards} />
+				<EditPage cards={cards} editItem={onButtonClick} />
 			</Route>
 			<Spinner spinnerRef={spinnerRef} />
-			<Popup buttonText={<i className="fas fa-plus"></i>} popRef={editMenuRef}>
+			<Popup
+				buttonText={
+					currentEditCard.hasOwnProperty("answer") ? (
+						<i className="fas fa-edit"></i>
+					) : (
+						<i className="fas fa-plus"></i>
+					)
+				}
+				popRef={editMenuRef}
+				title={currentEditCard.hasOwnProperty("answer") ? "Edit Card" : "Add Card"}
+				editItem={showHideMenu}
+			>
 				<CustomInput
 					placeholder="Please Input The Keyword"
-					label="Keyword"
-					value={currentEditCard ? currentEditCard.answer : ""}
+					label="Keyword (Required)"
+					value={currentEditCard.hasOwnProperty("answer") ? currentEditCard.answer : ""}
+					inputRef={keywordInputRef}
 				/>
 				<CustomInput
 					placeholder="Please Input The Icon URL"
-					label="Icon"
-					value={currentEditCard ? currentEditCard.imageURL : ""}
+					label="Icon Link (Optional)"
+					value={currentEditCard.hasOwnProperty("imageURL") ? currentEditCard.imageURL : ""}
+					inputRef={imgURLInputRef}
 				/>
 			</Popup>
 		</BrowserRouter>
