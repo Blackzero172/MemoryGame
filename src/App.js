@@ -6,6 +6,7 @@ import EditPage from "./pages/EditPage/EditPage.pages";
 import Header from "./components/Header/Header.components";
 import Spinner from "./components/Spinner/Spinner.components";
 import api from "./components/API/api";
+import Popup from "./components/Popup/Popup.components";
 import { useState, useEffect, useRef } from "react";
 const shuffle = (array) => {
 	let currentIndex = array.length,
@@ -23,6 +24,7 @@ const shuffle = (array) => {
 
 	return array;
 };
+let timerDuration = 0;
 
 let intervalID;
 function App() {
@@ -32,8 +34,11 @@ function App() {
 	const [difficultyLevel, setDifficulty] = useState("");
 	const [correctPairs, setPairs] = useState(0);
 	const [currentEditCard, setEditCard] = useState({});
-	let timerDuration = 0;
+	const [winText, setText] = useState("");
+	const [error, setError] = useState("");
 	const winLoseRef = useRef();
+	const deleteRef = useRef();
+	const errorRef = useRef();
 	const gridRef = useRef();
 	const timerRef = useRef();
 	const spinnerRef = useRef();
@@ -42,12 +47,21 @@ function App() {
 	const imgURLInputRef = useRef();
 
 	const getCards = async () => {
-		const { data } = await api.get();
-		setCards(data);
-		spinnerRef.current.classList.add("hidden");
+		try {
+			const { data } = await api.get();
+			setCards(data);
+		} catch (err) {
+			if (err.toString().includes("404")) setError("API request failed,Please try again later");
+			else if (err.toString().includes("Network Error"))
+				setError("No internet connection,Please check your internet and try again");
+			errorRef.current.classList.remove("hidden");
+		} finally {
+			spinnerRef.current.classList.add("hidden");
+		}
 	};
 	useEffect(() => {
 		getCards();
+		// eslint-disable-next-line
 	}, []);
 	const flipCard = (e) => {
 		if (flippedCards.length < 2 && !e.target.classList.contains("flipped")) {
@@ -84,12 +98,14 @@ function App() {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [correctPairs]);
 	const handleWinLose = () => {
+		setText(timerDuration > 0 ? "Congratulations, You Win!!" : "You Lose!!");
 		clearInterval(intervalID);
-		winLoseRef.current.classList.remove("hidden");
+		// winLoseRef.current.classList.remove("hidden");
 	};
 	const selectDiffculty = (e) => {
 		setPairs(0);
 		let numOfPairs = 0;
+		selectCard([]);
 		clearInterval(intervalID);
 		if (e.target.innerText === "Easy" || e.target.innerText === "Medium" || e.target.innerText === "Hard") {
 			setDifficulty(e.target.innerText);
@@ -135,8 +151,7 @@ function App() {
 	const onButtonClick = (e) => {
 		if (e.target.id) {
 			setEditCard(cards.find((card) => card.id === e.target.id));
-
-			if (e.target.getAttribute("action") === "Delete") deleteItem(e.target.id);
+			if (e.target.getAttribute("action") === "Delete") confirmCancelDelete(e);
 			else showHideMenu(e);
 		} else showHideMenu(e);
 	};
@@ -192,7 +207,15 @@ function App() {
 		imgURLInputRef.current.value = "";
 		spinnerRef.current.classList.add("hidden");
 	};
+	const confirmCancelDelete = (e) => {
+		if (!deleteRef.current.classList.contains("hidden"))
+			if (e.target.classList.contains("cancel")) {
+				deleteRef.current.classList.add("hidden");
+			} else deleteItem(currentEditCard.id);
+		else deleteRef.current.classList.remove("hidden");
+	};
 	const deleteItem = async (id) => {
+		deleteRef.current.classList.add("hidden");
 		spinnerRef.current.classList.remove("hidden");
 		await api.delete(id);
 		getCards();
@@ -213,6 +236,7 @@ function App() {
 					winLoseRef={winLoseRef}
 					onConfirm={selectDiffculty}
 					onCancel={reset}
+					text={winText}
 				/>
 			</Route>
 			<Route path="/edit">
@@ -223,11 +247,15 @@ function App() {
 					keywordInputRef={keywordInputRef}
 					imgURLInputRef={imgURLInputRef}
 					popRef={editMenuRef}
-					onConfirm={showHideMenu}
-					onCancel={showHideMenu}
+					onConfirmEdit={showHideMenu}
+					onCancelEdit={showHideMenu}
+					onConfirmDelete={confirmCancelDelete}
+					onCancelDelete={confirmCancelDelete}
+					deleteRef={deleteRef}
 				/>
 			</Route>
 			<Spinner spinnerRef={spinnerRef} />
+			<Popup isError err={error} popRef={errorRef} />
 		</BrowserRouter>
 	);
 }

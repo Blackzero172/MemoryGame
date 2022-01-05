@@ -11,3 +11,25 @@
 	height: 5vmin;
 	margin: 1rem;
 }
+@media only screen and (min-width: 426px) and (min-height: 1024px) and (max-width: 1024px) {
+	.landing-container a {
+		font-size: 2rem;
+	}
+	.landing-container h2 {
+		font-size: 3rem;
+	}
+	nav a {
+		font-size: 2rem;
+	}
+}
+@media only screen and (min-height: 426px) and (min-width: 1024px) and (max-height: 1024px) {
+	.landing-container a {
+		font-size: 1.5rem;
+	}
+	.landing-container h2 {
+		font-size: 2rem;
+	}
+	nav a {
+		font-size: 1.5rem;
+	}
+}

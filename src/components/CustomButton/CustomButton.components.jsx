@@ -1,5 +1,4 @@
 import React from "react";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import "./CustomButton.styles.css";
 const CustomButton = ({ children, style, styleClass, onClick, id, action }) => {
 	return (

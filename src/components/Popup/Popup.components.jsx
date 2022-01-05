@@ -9,7 +9,12 @@ const Popup = ({ children, confirmText, cancelText, isError, err, popRef, title,
 				<div className="message">{isError ? err : children}</div>
 
 				<div className="button-container">
-					<CustomButton onClick={onConfirm}>{confirmText}</CustomButton>
+					<CustomButton
+						onClick={onConfirm}
+						style={confirmText === "" || !confirmText ? { display: "none" } : {}}
+					>
+						{confirmText}
+					</CustomButton>
 					<CustomButton
 						onClick={onCancel}
 						style={cancelText === "" || !cancelText ? { display: "none" } : {}}

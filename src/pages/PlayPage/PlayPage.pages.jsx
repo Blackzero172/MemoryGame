@@ -1,15 +1,14 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Card from "../../components/Card/Card.components";
 import "./PlayPage.styles.css";
 import Popup from "../../components/Popup/Popup.components";
 import { useHistory } from "react-router-dom";
-const PlayPage = ({ cards, flipCard, gridRef, timerRef, winLoseRef, onCancel, onConfirm }) => {
+const PlayPage = ({ cards, flipCard, gridRef, timerRef, winLoseRef, onCancel, onConfirm, text }) => {
 	let history = useHistory();
 	const navigate = () => {
 		onCancel();
 		history.push("/");
 	};
-	let text = "";
 	const resetBoard = () => {
 		if (gridRef.current.children.length > 0) {
 			[...gridRef.current.children].forEach((card) => {

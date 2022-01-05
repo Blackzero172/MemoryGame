@@ -8,11 +8,14 @@ const EditPage = ({
 	cards,
 	editItem,
 	currentEditCard,
-	onConfirm,
-	onCancel,
+	onConfirmEdit,
+	onCancelEdit,
+	onConfirmDelete,
+	onCancelDelete,
 	popRef,
 	keywordInputRef,
 	imgURLInputRef,
+	deleteRef,
 }) => {
 	const customCards = cards.filter((card) => card.id > 18);
 	return (
@@ -36,8 +39,8 @@ const EditPage = ({
 				cancelText={<i className="fas fa-times"></i>}
 				popRef={popRef}
 				title={currentEditCard.hasOwnProperty("answer") ? "Edit Card" : "Add Card"}
-				onConfirm={onConfirm}
-				onCancel={onCancel}
+				onConfirm={onConfirmEdit}
+				onCancel={onCancelEdit}
 			>
 				<CustomInput
 					placeholder="Please Input The Keyword"
@@ -52,6 +55,14 @@ const EditPage = ({
 					inputRef={imgURLInputRef}
 				/>
 			</Popup>
+			<Popup
+				title="Are you sure you want to delete this item?"
+				cancelText={<i className="fas fa-times"></i>}
+				confirmText="Yes I'm Sure"
+				popRef={deleteRef}
+				onConfirm={onConfirmDelete}
+				onCancel={onCancelDelete}
+			/>
 		</div>
 	);
 };
