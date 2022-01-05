@@ -45,6 +45,9 @@ p,
 .text-hidden {
 	color: #ccc;
 }
+.flipped .text-hidden {
+	color: #000;
+}
 .not-found {
 	display: none;
 }

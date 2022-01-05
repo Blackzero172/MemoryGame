@@ -10,19 +10,20 @@
 }
 .window {
 	width: 40%;
-	height: 40vh;
 	background: #333;
 	display: flex;
 	border: 2px solid #2c9de8;
 	flex-direction: column;
 	align-items: center;
 	border-radius: 0.5rem;
+	position: relative;
 }
 .error .window {
 	border: 2px solid red;
 	color: red;
 }
-.window button {
+.window button,
+.window a {
 	padding: 0.5rem;
 	margin-top: auto;
 }

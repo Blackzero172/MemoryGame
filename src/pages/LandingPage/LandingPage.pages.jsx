@@ -8,7 +8,6 @@ const LandingPage = ({ selectDiffculty }) => {
 			<CustomLink text="Easy" path="/play" onClick={selectDiffculty} diff="Easy" />
 			<CustomLink text="Medium" path="/play" onClick={selectDiffculty} diff="Medium" />
 			<CustomLink text="Hard" path="/play" onClick={selectDiffculty} diff="Hard" />
-			<CustomLink text="Custom" path="/play" onClick={selectDiffculty} diff="Custom" />
 		</div>
 	);
 };

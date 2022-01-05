@@ -5,9 +5,7 @@ import LandingPage from "./pages/LandingPage/LandingPage.pages";
 import EditPage from "./pages/EditPage/EditPage.pages";
 import Header from "./components/Header/Header.components";
 import Spinner from "./components/Spinner/Spinner.components";
-import Popup from "./components/Popup/Popup.components";
 import api from "./components/API/api";
-import CustomInput from "./components/CustomInput/CustomInput.components";
 import { useState, useEffect, useRef } from "react";
 const shuffle = (array) => {
 	let currentIndex = array.length,
@@ -25,6 +23,7 @@ const shuffle = (array) => {
 
 	return array;
 };
+
 let intervalID;
 function App() {
 	const [cards, setCards] = useState([]);
@@ -34,12 +33,14 @@ function App() {
 	const [correctPairs, setPairs] = useState(0);
 	const [currentEditCard, setEditCard] = useState({});
 	let timerDuration = 0;
+	const winLoseRef = useRef();
 	const gridRef = useRef();
 	const timerRef = useRef();
 	const spinnerRef = useRef();
 	const editMenuRef = useRef();
 	const keywordInputRef = useRef();
 	const imgURLInputRef = useRef();
+
 	const getCards = async () => {
 		const { data } = await api.get();
 		setCards(data);
@@ -79,18 +80,28 @@ function App() {
 		}
 	};
 	useEffect(() => {
-		if (correctPairs === cardsInPlay.length / 2 && cardsInPlay.length > 0) handleWin();
+		if (correctPairs === cardsInPlay.length / 2 && cardsInPlay.length > 0) handleWinLose();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [correctPairs]);
-	const handleWin = () => {
+	const handleWinLose = () => {
 		clearInterval(intervalID);
+		winLoseRef.current.classList.remove("hidden");
 	};
 	const selectDiffculty = (e) => {
-		setDifficulty(e.target.innerText);
+		setPairs(0);
+		let numOfPairs = 0;
 		clearInterval(intervalID);
+		if (e.target.innerText === "Easy" || e.target.innerText === "Medium" || e.target.innerText === "Hard") {
+			setDifficulty(e.target.innerText);
+			timerDuration = e.target.innerText === "Easy" ? 32000 : e.target.innerText === "Medium" ? 30000 : 25000;
+			numOfPairs = e.target.innerText === "Easy" ? 8 : 18;
+			if (gridRef.current) gridRef.current.className = e.target.innerText;
+		} else if (difficultyLevel) {
+			winLoseRef.current.classList.add("hidden");
+			timerDuration = difficultyLevel === "Easy" ? 32000 : difficultyLevel === "Medium" ? 30000 : 25000;
+			numOfPairs = difficultyLevel === "Easy" ? 8 : 18;
+		}
 		const cardsCopy = [...cards];
-		timerDuration = e.target.innerText === "Easy" ? 32000 : e.target.innerText === "Medium" ? 30000 : 25000;
-		const numOfPairs = e.target.innerText === "Easy" ? 8 : 18;
 		activateTimer();
 		const diffCards = [];
 		for (let i = 0; i < numOfPairs; i++) {
@@ -98,20 +109,24 @@ function App() {
 			diffCards.push(cardsCopy[randNum]);
 			cardsCopy.splice(randNum, 1);
 		}
-		if (gridRef.current) gridRef.current.className = e.target.innerText;
+
 		chooseCards(shuffle([...diffCards, ...diffCards]));
 	};
 	useEffect(() => {
 		if (gridRef.current && difficultyLevel !== "") gridRef.current.className = difficultyLevel;
-	});
+	}, [difficultyLevel]);
 	const reset = () => {
 		setDifficulty("");
 		clearInterval(intervalID);
+		if (winLoseRef.current) winLoseRef.current.classList.add("hidden");
 	};
 	const activateTimer = () => {
 		const ratio = timerDuration / 100;
 		intervalID = setInterval(() => {
 			if (timerDuration > 0) timerDuration -= 100;
+			else if (timerDuration <= 0) {
+				handleWinLose();
+			}
 			if (timerRef.current) {
 				timerRef.current.style.width = `${timerDuration / ratio}%`;
 			}
@@ -190,37 +205,29 @@ function App() {
 				<LandingPage selectDiffculty={selectDiffculty} />
 			</Route>
 			<Route path="/play">
-				<PlayPage cards={cardsInPlay} flipCard={flipCard} gridRef={gridRef} timerRef={timerRef} />
+				<PlayPage
+					cards={cardsInPlay}
+					flipCard={flipCard}
+					gridRef={gridRef}
+					timerRef={timerRef}
+					winLoseRef={winLoseRef}
+					onConfirm={selectDiffculty}
+					onCancel={reset}
+				/>
 			</Route>
 			<Route path="/edit">
-				<EditPage cards={cards} editItem={onButtonClick} />
+				<EditPage
+					cards={cards}
+					editItem={onButtonClick}
+					currentEditCard={currentEditCard}
+					keywordInputRef={keywordInputRef}
+					imgURLInputRef={imgURLInputRef}
+					popRef={editMenuRef}
+					onConfirm={showHideMenu}
+					onCancel={showHideMenu}
+				/>
 			</Route>
 			<Spinner spinnerRef={spinnerRef} />
-			<Popup
-				buttonText={
-					currentEditCard.hasOwnProperty("answer") ? (
-						<i className="fas fa-edit"></i>
-					) : (
-						<i className="fas fa-plus"></i>
-					)
-				}
-				popRef={editMenuRef}
-				title={currentEditCard.hasOwnProperty("answer") ? "Edit Card" : "Add Card"}
-				editItem={showHideMenu}
-			>
-				<CustomInput
-					placeholder="Please Input The Keyword"
-					label="Keyword (Required)"
-					value={currentEditCard.hasOwnProperty("answer") ? currentEditCard.answer : ""}
-					inputRef={keywordInputRef}
-				/>
-				<CustomInput
-					placeholder="Please Input The Icon URL"
-					label="Icon Link (Optional)"
-					value={currentEditCard.hasOwnProperty("imageURL") ? currentEditCard.imageURL : ""}
-					inputRef={imgURLInputRef}
-				/>
-			</Popup>
 		</BrowserRouter>
 	);
 }

@@ -20,3 +20,9 @@
 .Hard {
 	grid-template-columns: repeat(6, 13%);
 }
+.popup-container .window {
+	height: unset;
+}
+.cancel {
+	position: unset;
+}

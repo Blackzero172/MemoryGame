@@ -1,18 +1,23 @@
 .card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  width: 100%;
-  gap: 1rem;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+	width: 100%;
+	gap: 1rem;
 }
 .main-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 1rem;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding-top: 1rem;
 }
 .add-btn {
-  width: 100px;
-  height: 100px;
-  font-size: 3rem;
-  border-radius: 50%;
+	width: 100px;
+	height: 100px;
+	font-size: 3rem;
+	border-radius: 50%;
+}
+.main-container .cancel {
+	position: absolute;
+	top: 0.5rem;
+	right: 0;
 }

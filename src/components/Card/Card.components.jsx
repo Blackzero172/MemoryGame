@@ -9,7 +9,7 @@ const Card = ({ card, onClick }) => {
 			<div className="front face"></div>
 			<div className="back face">
 				<img src={card.imageURL} alt="Card" onError={hideImg} />
-				<p>{card.answer}</p>
+				<p className="text-hidden">{card.answer}</p>
 			</div>
 		</div>
 	);
