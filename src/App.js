@@ -51,9 +51,9 @@ function App() {
 			const { data } = await api.get();
 			setCards(data);
 		} catch (err) {
-			if (err.toString().includes("404")) setError("API request failed,Please try again later");
+			if (err.toString().includes("404")) setError("API request failed , Please try again later");
 			else if (err.toString().includes("Network Error"))
-				setError("No internet connection,Please check your internet and try again");
+				setError("No internet connection , Please check your internet and try again");
 			errorRef.current.classList.remove("hidden");
 		} finally {
 			spinnerRef.current.classList.add("hidden");
