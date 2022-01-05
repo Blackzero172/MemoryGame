@@ -11,7 +11,7 @@ const Card = ({ card, onClick }) => {
 	const altRef = useRef();
 	return (
 		<div className="card" onClick={onClick} answer={card.answer}>
-			<div className="front face">{card.answer}</div>
+			<div className="front face"></div>
 			<div className="back face">
 				<img src={card.imageURL} alt="Card" onError={hideImg} onLoad={hideText} />
 				<p className="text-hidden" ref={altRef}>
