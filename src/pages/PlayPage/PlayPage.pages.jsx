@@ -11,6 +11,7 @@ const PlayPage = ({ cards, flipCard, gridRef, timerRef, winLoseRef, onCancel, on
 	};
 	useEffect(() => {
 		if (cards.length === 0) navigate();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 	const resetBoard = () => {
 		if (gridRef.current.children.length > 0) {
