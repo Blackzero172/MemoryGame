@@ -1,0 +1,8 @@
+[[redirects]]
+from="/*"
+to="/"
+status = 200
+[[redirects]]
+from="/play"
+to="/"
+status = 200
