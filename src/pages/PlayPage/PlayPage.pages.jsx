@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Card from "../../components/Card/Card.components";
 import "./PlayPage.styles.css";
 import Popup from "../../components/Popup/Popup.components";
@@ -9,6 +9,9 @@ const PlayPage = ({ cards, flipCard, gridRef, timerRef, winLoseRef, onCancel, on
 		onCancel();
 		history.push("/");
 	};
+	useEffect(() => {
+		if (cards.length === 0) navigate();
+	}, []);
 	const resetBoard = () => {
 		if (gridRef.current.children.length > 0) {
 			[...gridRef.current.children].forEach((card) => {
