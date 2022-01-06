@@ -100,7 +100,7 @@ function App() {
 	const handleWinLose = () => {
 		setText(timerDuration > 0 ? "Congratulations, You Win!!" : "You Lose!!");
 		clearInterval(intervalID);
-		// winLoseRef.current.classList.remove("hidden");
+		winLoseRef.current.classList.remove("hidden");
 	};
 	const selectDiffculty = (e) => {
 		setPairs(0);
